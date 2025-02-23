@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flecha Giratoria - KAMR</title>
+    <style>
+        /* Estilos CSS */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFE600; /* Fondo amarillo */
+            font-family: Arial, sans-serif;
+            flex-direction: column; /* Alinear elementos verticalmente */
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .flecha {
+            font-size: 100px; /* Tamaño de la flecha */
+            color: black;
+            margin-bottom: 20px; /* Espacio debajo de la flecha */
+            transition: opacity 0.3s ease-in-out; /* Transición para desaparecer/aparecer */
+        }
+
+        .flecha.izquierda {
+            transform: rotate(180deg); /* Rotación para la izquierda */
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white; /* Letras blancas */
+            background-color: blue; /* Fondo azul */
+            border: 2px solid black; /* Borde negro */
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .marca {
+            margin-top: 40px; /* Más espacio arriba del texto */
+            font-size: 24px;
+            color: black; /* Texto en negro */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Flecha -->
+        <div id="flecha" class="flecha">➔</div>
+
+        <!-- Botón de Iniciar/Detener -->
+        <button id="boton">Iniciar</button>
+    </div>
+
+    <!-- Texto de marca -->
+    <div class="marca">KAMR®</div>
+
+    <script>
+        // JavaScript
+        // Variables
+        const flecha = document.getElementById('flecha');
+        const boton = document.getElementById('boton');
+        let intervalo;
+        let corriendo = false;
+        let ultimaDireccion = null;
+        let repeticiones = 0;
+
+        // Función para cambiar la flecha
+        function cambiarFlecha() {
+            let nuevaDireccion;
+
+            // Asegurarse de que no se repita más de 3 veces seguidas
+            do {
+                nuevaDireccion = Math.random() < 0.5 ? 'derecha' : 'izquierda'; // Dirección aleatoria
+            } while (nuevaDireccion === ultimaDireccion && repeticiones >= 2);
+
+            // Actualizar contador de repeticiones
+            if (nuevaDireccion === ultimaDireccion) {
+                repeticiones++;
+            } else {
+                repeticiones = 0;
+            }
+
+            // Ocultar la flecha
+            flecha.style.opacity = 0; // Desaparecer
+
+            // Cambiar la flecha después de desaparecer
+            setTimeout(() => {
+                if (nuevaDireccion === 'izquierda') {
+                    flecha.classList.add('izquierda'); // Aplicar rotación para la izquierda
+                } else {
+                    flecha.classList.remove('izquierda'); // Quitar rotación para la derecha
+                }
+                flecha.style.opacity = 1; // Aparecer
+            }, 300); // Duración de la transición
+
+            ultimaDireccion = nuevaDireccion; // Guardar la última dirección
+        }
+
+        // Función para iniciar o detener
+        function iniciarDetener() {
+            if (corriendo) {
+                clearInterval(intervalo); // Detener intervalo
+                boton.textContent = 'Iniciar';
+            } else {
+                intervalo = setInterval(cambiarFlecha, 1500); // Cambiar flecha cada 1.5 segundos
+                boton.textContent = 'Detener';
+            }
+            corriendo = !corriendo; // Cambiar estado
+        }
+
+        // Evento para el botón
+        boton.addEventListener('click', iniciarDetener);
+    </script>
+</body>
+</html>
